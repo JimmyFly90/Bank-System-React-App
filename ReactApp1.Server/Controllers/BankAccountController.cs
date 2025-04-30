@@ -3,7 +3,7 @@
 namespace ReactApp1.Server.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class BankAccountController : ControllerBase
     {
         private readonly ILogger<BankAccountController> _logger;
@@ -29,7 +29,7 @@ namespace ReactApp1.Server.Controllers
             return new List<BankAccount> { account };
         }
 
-        [HttpPost(Name = "create")]
+        [HttpPost]
         public IActionResult Create([FromBody] CreateRequest request)
         {
             if (request.InitialBalance < 0)

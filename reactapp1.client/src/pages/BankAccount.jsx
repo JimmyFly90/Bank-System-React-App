@@ -58,7 +58,7 @@ export default function BankAccount() {
     );
 
     async function populateBankAccount() {
-        const response = await fetch('/api/bankaccount');
+        const response = await fetch('/bankaccount');
         if (response.ok) {
             const data = await response.json();
             setBalance(data[0]?.balance || 0);
@@ -68,7 +68,7 @@ export default function BankAccount() {
 
     async function createAccount() {
         try {
-            const response = await fetch('/api/bankaccount', {
+            const response = await fetch('/bankaccount', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newAccount),
