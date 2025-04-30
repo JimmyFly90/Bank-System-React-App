@@ -10,5 +10,6 @@ function Navbar() {
     );
 }
 export default function About() {
-    return <h1>About Page</h1>;
+    return <p>This is an app showing a page about the Weather, and randomly another about Bank Accounts.</p>;
+    
 }

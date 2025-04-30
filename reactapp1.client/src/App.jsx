@@ -23,7 +23,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/about" element={<About />} /> 
                     <Route path="/bankaccount" element={<BankAccount />} />
-                    <Route path="/weather" element={<WeatherForecast />} />
+                    <Route path="/weatherforecast" element={<WeatherForecast />} />
                 </Routes>
             </Router>
         );
