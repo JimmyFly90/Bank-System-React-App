@@ -77,7 +77,7 @@ export default function BankAccount() {
                 const data = await response.json();
                 console.log('Account created:', data);
                 setBalance(data.balance);
-                setLogs((prev) => [...prev, `Account created for ${data.owner} with balance $${data.balance}`]);
+                setLogs((prev) => [...prev, ...data.logs]);
             } else {
                 console.error('Error creating account:', response.statusText);
             }
@@ -96,8 +96,10 @@ export default function BankAccount() {
                 const data = await response.json();
                 console.log('Deposit successful:', data);
                 setBalance(data.balance);
-                setLogs((prev) => [...prev, `Deposit of $${data.amount} made. Note: ${data.note}`]);
+                setLogs((prev) => [...prev, ...data.logs]);
             } else {
+                const errorData = await response.json();
+                setLogs((prev) => [...prev, ...errorData.Logs]);
                 console.error('Error making deposit:', response.statusText);
             }
         } catch (error) {
