@@ -54,6 +54,10 @@ export default defineConfig({
             '^/bankaccount': {
                 target,
                 secure: false
+            },
+            '^/lineofcreditaccount': {
+                target,
+                secure: false
             }
         },
         port: parseInt(env.DEV_SERVER_PORT || '64923'),

@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/home';
-import About from './pages/about';
 import BankAccount from './pages/bankaccount';
+import LineOfCreditAccount from './pages/lineofcreditaccount';
 import WeatherForecast from './pages/weatherforecast';
 import './App.css';
 
@@ -11,13 +11,12 @@ function App()
         <Router>
              <Routes>
                  <Route path="/" element={<Home />} />
-                 <Route path="/about" element={<About />} /> 
                  <Route path="/bankaccount" element={<BankAccount />} />
+                 <Route path="/lineofcreditaccount" element={<LineOfCreditAccount />} />
                  <Route path="/weather" element={<WeatherForecast />} />
              </Routes>
          </Router>
      );
-    
 }
 
 export default App;

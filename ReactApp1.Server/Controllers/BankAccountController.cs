@@ -20,7 +20,7 @@ namespace ReactApp1.Server.Controllers
 
             public LogEntry(string message)
             {
-                Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                Timestamp = DateTime.Now.ToString("YYYY-MM-DD HH:MM:SS");
                 Message = message;
             }
         }
