@@ -5,6 +5,7 @@ export default function BankAccount() {
     const [logs, setLogs] = useState([]);
     const [newAccount, setNewAccount] = useState({ owner: '', initialBalance: 0 });
     const [deposit, setDeposit] = useState({ amount: 0, note: '' });
+    const [withdrawal, setWithdrawal] = useState({ amount: 0, note: '' });
 
     useEffect(() => {
         (async () => {
@@ -54,6 +55,21 @@ export default function BankAccount() {
                 onChange={(e) => setDeposit({ ...deposit, note: e.target.value })}
             />
             <button onClick={makeDeposit}>Deposit</button>
+
+            <h2>Make a Withdrawal</h2>
+            <input
+                type="number"
+                placeholder="Amount"
+                value={withdrawal.amount}
+                onChange={(e) => setWithdrawal({ ...withdrawal, amount: parseFloat(e.target.value) })}
+            />
+            <input
+                type="text"
+                placeholder="Note"
+                value={withdrawal.note}
+                onChange={(e) => setWithdrawal({ ...withdrawal, note: e.target.value })}
+            />
+            <button onClick={makeWithdrawal}>Withdraw</button>
         </div>
     );
 
@@ -87,7 +103,7 @@ export default function BankAccount() {
     }
     async function makeDeposit() {
         try {
-            const response = await fetch('/api/bankaccount/deposit', {
+            const response = await fetch('/bankaccount/deposit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(deposit),
@@ -104,6 +120,28 @@ export default function BankAccount() {
             }
         } catch (error) {
             console.error('Error making deposit:', error);
+        }
+    }
+
+    async function makeWithdrawal() {
+        try {
+            const response = await fetch('/bankaccount/withdrawal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(withdrawal),
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Withdrawal successful:', data);
+                setBalance(data.balance);
+                setLogs((prev) => [...prev, ...data.logs]);
+            } else {
+                const errorData = await response.json();
+                setLogs((prev) => [...prev, ...errorData.Logs]);
+                console.error('Error making withdrawal:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error making withdrawal:', error);
         }
     }
 }

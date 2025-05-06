@@ -30,21 +30,6 @@ namespace ReactApp1.Server.Controllers
         {
             var logs = new List<LogEntry>();
 
-            _logger.LogInformation("Creating a new bank account for John Doe with an initial balance of 1000.");
-            logs.Add(new LogEntry("Creating a new bank account for John Doe with an initial balance of 1000."));
-            var account = new BankAccount("John Doe", 1000);
-
-            _logger.LogInformation("Making a deposit of 500.");
-            logs.Add(new LogEntry("Making a deposit of 500."));
-            account.MakeDeposit(500, DateTime.Now, "Deposit");
-
-            _logger.LogInformation("Making a withdrawal of 200.");
-            logs.Add(new LogEntry("Making a withdrawal of 200."));
-            account.MakeWithdrawal(200, DateTime.Now, "Withdrawal");
-
-            _logger.LogInformation("Returning the bank account details");
-            logs.Add(new LogEntry("Returning the bank account details"));
-
             return logs;
         }
 
@@ -98,6 +83,30 @@ namespace ReactApp1.Server.Controllers
         }
 
         public class DepositRequest
+        {
+            public decimal Amount { get; set; }
+            public required string Note { get; set; }
+        }
+
+        [HttpPost ("withdrawal")]
+        public IActionResult Withdrawal([FromBody] WithdrawalRequest request)
+        {
+            var logs = new List<LogEntry>();
+
+            var account = new BankAccount("John Doe", 1000);
+            account.MakeWithdrawal(request.Amount, DateTime.Now, request.Note);
+            var logMessage = $"Withdrawal of {request.Amount} from account {account.Number} with note: {request.Note}";
+            _logger.LogInformation(logMessage);
+            logs.Add(new LogEntry(logMessage));
+
+            return Ok(new
+            {
+                Balance = account.Balance,
+                Logs = logs
+            });
+        }
+
+        public class WithdrawalRequest
         {
             public decimal Amount { get; set; }
             public required string Note { get; set; }
