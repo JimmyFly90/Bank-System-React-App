@@ -62,6 +62,7 @@ namespace ReactApp1.Server.Controllers
         {
             public required string Owner { get; set; }
             public decimal InitialBalance { get; set; }
+            public decimal CreditLimit { get; set; }
         }
 
         [HttpPost("payment")]
@@ -69,7 +70,7 @@ namespace ReactApp1.Server.Controllers
         {
             var logs = new List<LogEntry>();
 
-            var account = new LineOfCreditAccount("John Doe", -1000);
+            var account = new LineOfCreditAccount("John Doe", 0, -1000);
             account.MakePayment(request.Amount, DateTime.Now);
             var logMessage = $"Payment of {request.Amount} made to account {account.Number}";
             _logger.LogInformation(logMessage);

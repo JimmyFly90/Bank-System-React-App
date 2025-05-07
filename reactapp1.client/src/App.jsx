@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/home';
+import Navbar from './pages/Navbar';
 import BankAccount from './pages/bankaccount';
 import LineOfCreditAccount from './pages/lineofcreditaccount';
 import WeatherForecast from './pages/weatherforecast';
@@ -9,6 +10,7 @@ function App()
 {
     return (
         <Router>
+            <Navbar />
              <Routes>
                  <Route path="/" element={<Home />} />
                  <Route path="/bankaccount" element={<BankAccount />} />
