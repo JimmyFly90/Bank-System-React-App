@@ -13,18 +13,6 @@ namespace ReactApp1.Server.Controllers
             _logger = logger;
         }
 
-        public class LogEntry
-        {
-            public string Timestamp { get; set; }
-            public string Message { get; set; }
-
-            public LogEntry(string message)
-            {
-                Timestamp = DateTime.Now.ToString("YYYY-MM-DD HH:MM:SS");
-                Message = message;
-            }
-        }
-
         [HttpGet(Name = "GetBankAccount")]
         public IEnumerable<LogEntry> Get()
         {
@@ -58,12 +46,6 @@ namespace ReactApp1.Server.Controllers
             });
         }
 
-        public class CreateRequest
-        {
-            public required string Owner { get; set; }
-            public decimal InitialBalance { get; set; }
-        }
-
         [HttpPost ("deposit")]
         public IActionResult Deposit([FromBody] DepositRequest request)
         {
@@ -82,12 +64,6 @@ namespace ReactApp1.Server.Controllers
             });
         }
 
-        public class DepositRequest
-        {
-            public decimal Amount { get; set; }
-            public required string Note { get; set; }
-        }
-
         [HttpPost ("withdrawal")]
         public IActionResult Withdrawal([FromBody] WithdrawalRequest request)
         {
@@ -104,12 +80,6 @@ namespace ReactApp1.Server.Controllers
                 Balance = account.Balance,
                 Logs = logs
             });
-        }
-
-        public class WithdrawalRequest
-        {
-            public decimal Amount { get; set; }
-            public required string Note { get; set; }
         }
     }
 }

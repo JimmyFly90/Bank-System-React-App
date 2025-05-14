@@ -13,18 +13,6 @@ namespace ReactApp1.Server.Controllers
             _logger = logger;
         }
 
-        public class LogEntry
-        {
-            public string Timestamp { get; set; }
-            public string Message { get; set; }
-
-            public LogEntry(string message)
-            {
-                Timestamp = DateTime.Now.ToString("YYYY-MM-DD HH:MM:SS");
-                Message = message;
-            }
-        }
-
         [HttpGet(Name = "GetLineOfCreditAccount")]
         public IEnumerable<LogEntry> Get()
         {
@@ -58,13 +46,6 @@ namespace ReactApp1.Server.Controllers
             });
         }
 
-        public class CreateRequest
-        {
-            public required string Owner { get; set; }
-            public decimal InitialBalance { get; set; }
-            public decimal CreditLimit { get; set; }
-        }
-
         [HttpPost("payment")]
         public IActionResult Payment([FromBody] PaymentRequest request)
         {
@@ -83,9 +64,5 @@ namespace ReactApp1.Server.Controllers
             });
         }
 
-        public class PaymentRequest
-        {
-            public decimal Amount { get; set; }
-        }
     }
 }
