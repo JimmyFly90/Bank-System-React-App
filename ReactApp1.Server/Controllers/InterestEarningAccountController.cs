@@ -5,14 +5,14 @@ namespace ReactApp1.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BankAccountController : ControllerBase
+    public class InterestEarningAccountController : ControllerBase
     {
-        private static readonly ConcurrentDictionary<string, BankAccount> _accounts = new();
+        private static readonly ConcurrentDictionary<string, InterestEarningAccount> _accounts = new();
         private static readonly ConcurrentDictionary<string, List<LogEntry>> _logs = new();
 
-        private readonly ILogger<BankAccountController> _logger;
+        private readonly ILogger<InterestEarningAccountController> _logger;
 
-        public BankAccountController(ILogger<BankAccountController> logger)
+        public InterestEarningAccountController(ILogger<InterestEarningAccountController> logger)
         {
             _logger = logger;
         }
@@ -22,8 +22,8 @@ namespace ReactApp1.Server.Controllers
         {
             if (request.InitialBalance < 0)
                 return BadRequest("Initial balance cannot be negative.");
-
-            var account = new BankAccount(request.Owner, request.InitialBalance);
+            
+            var account = new InterestEarningAccount(request.Owner, request.InitialBalance);
             _accounts[account.Number] = account;
             _logs[account.Number] = new List<LogEntry>();
 

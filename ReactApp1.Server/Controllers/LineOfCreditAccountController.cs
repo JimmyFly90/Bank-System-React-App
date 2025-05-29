@@ -32,7 +32,7 @@ namespace ReactApp1.Server.Controllers
                 return BadRequest("Initial balance cannot be positive.");
             }
 
-            var account = new BankAccount(request.Owner, request.InitialBalance);
+            var account = new LineOfCreditAccount(request.Owner, request.InitialBalance, 0);
             var logMessage = $"Created a new Line of Credit account for {request.Owner} with an initial balance of {request.InitialBalance}";
             _logger.LogInformation(logMessage);
             logs.Add(new LogEntry(logMessage));

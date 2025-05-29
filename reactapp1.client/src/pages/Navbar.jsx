@@ -13,6 +13,9 @@ export default function MyAppNav()
             <NavLink to="/lineofcreditaccount" end>
                 Line of Credit Account
             </NavLink>
+            <NavLink to="/interestearningaccount" end>
+                Interest Earning Account
+            </NavLink>
         </nav>
     );
 }

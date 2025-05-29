@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function BankAccount() {
+export default function InterestEarningAccount() {
     const [balance, setBalance] = useState(0);
     const [logs, setLogs] = useState([]);
     const [newAccount, setNewAccount] = useState({ owner: '', initialBalance: 0 });
@@ -10,13 +10,13 @@ export default function BankAccount() {
 
     useEffect(() => {
         if (accountNumber) {
-            populateBankAccount();
+            populateInterestEarningAccount();
         }
-    });
+    }, [accountNumber]);
 
     return (
         <div>
-            <h1>Bank Account Page</h1>
+            <h1> Interest Earning Account Page</h1>
             <p>Balance: ${balance}</p>
             <h2>Logs</h2>
             <ul>
@@ -76,7 +76,7 @@ export default function BankAccount() {
 
     async function createAccount() {
         try {
-            const response = await fetch(`/bankaccount/`, {
+            const response = await fetch(`/interestearningaccount/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newAccount),
@@ -93,10 +93,10 @@ export default function BankAccount() {
             console.error('Error creating account:', error);
         }
     }
-    
-    async function populateBankAccount() {
+
+    async function populateInterestEarningAccount() {
         if (!accountNumber) return;
-        const response = await fetch(`/bankaccount/${accountNumber}/logs`);
+        const response = await fetch(`/interestearningaccount/${accountNumber}/logs`);
         if (response.ok) {
             const data = await response.json();
             setLogs(data);
@@ -109,7 +109,7 @@ export default function BankAccount() {
             return;
         }
         try {
-            const response = await fetch(`/bankaccount/${accountNumber}/deposits`, {
+            const response = await fetch(`/interestearningaccount/{accountNumber}/deposits`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(deposit),
@@ -134,7 +134,7 @@ export default function BankAccount() {
             return;
         }
         try {
-            const response = await fetch(`/bankaccount/${accountNumber}/withdrawals`, {
+            const response = await fetch(`/interestearningaccount/{accountNumber}/withdrawals`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(withdrawal),
@@ -145,7 +145,7 @@ export default function BankAccount() {
                 setLogs(data.logs);
             } else {
                 const errorData = await response.json();
-                setLogs(errorData.logs || []);
+                setLogs(errorData.Logs || []);
                 console.error('Error making withdrawal:', response.statusText);
             }
         } catch (error) {

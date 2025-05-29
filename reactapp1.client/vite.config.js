@@ -58,7 +58,11 @@ export default defineConfig({
             '^/lineofcreditaccount': {
                 target,
                 secure: false
-            }
+            },
+            '^/interestearningaccount': {
+                target,
+                secure: false
+            },
         },
         port: parseInt(env.DEV_SERVER_PORT || '64923'),
         https: {
