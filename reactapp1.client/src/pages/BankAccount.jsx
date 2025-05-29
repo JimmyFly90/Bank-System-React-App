@@ -17,15 +17,6 @@ export default function BankAccount() {
     return (
         <div>
             <h1>Bank Account Page</h1>
-            <p>Balance: ${balance}</p>
-            <h2>Logs</h2>
-            <ul>
-                {logs.map((log, index) => (
-                    <li key={index}>
-                        <strong>{log.timestamp}</strong>: {log.message}
-                    </li>
-                ))}
-            </ul>
 
             <h2>Create New Account</h2>
             <input
@@ -71,6 +62,17 @@ export default function BankAccount() {
                 onChange={(e) => setWithdrawal({ ...withdrawal, note: e.target.value })}
             />
             <button onClick={makeWithdrawal}>Withdraw</button>
+
+            <p>Balance: ${balance}</p>
+
+            <h2>Logs</h2>
+            <ul>
+                {logs.map((log, index) => (
+                    <li key={index}>
+                        <strong>{log.timestamp}</strong>: {log.message}
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 

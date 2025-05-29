@@ -4,13 +4,14 @@ export default function LineOfCreditAccount() {
     const [balance, setBalance] = useState(0);
     const [logs, setLogs] = useState([]);
     const [newAccount, setNewAccount] = useState({ owner: '', initialBalance: 0 });
+    const [accountNumber, setAccountNumber] = useState('');
     const [payment, setPayment] = useState({ amount: 0, note: '' });
 
     useEffect(() => {
-        (async () => {
+        if (accountNumber) {
             populateLineOfCreditAccount();
-        })();
-    }, []);
+        }
+    }, [accountNumber]);
 
     return (
         <div>
@@ -58,27 +59,18 @@ export default function LineOfCreditAccount() {
         </div>
     );
 
-    async function populateLineOfCreditAccount() {
-        const response = await fetch('/lineofcreditaccount');
-        if (response.ok) {
-            const data = await response.json();
-            setBalance(data[0]?.balance || 0);
-            setLogs(data);
-        }
-    }
-
     async function createAccount() {
         try {
-            const response = await fetch('/lineofcreditaccount', {
+            const response = await fetch(`/lineofcreditaccount`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newAccount),
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log('Account created:', data);
+                setAccountNumber(data.accountNumber);
                 setBalance(data.balance);
-                setLogs((prev) => [...prev, ...data.logs]);
+                setLogs(data.logs);
             } else {
                 console.error('Error creating account:', response.statusText);
             }
@@ -86,21 +78,30 @@ export default function LineOfCreditAccount() {
             console.error('Error creating account:', error);
         }
     }
+
+    async function populateLineOfCreditAccount() {
+        if (!accountNumber) return;
+        const response = await fetch(`/lineofcreditaccount/${accountNumber}/logs`);
+        if (response.ok) {
+            const data = await response.json();
+            setLogs(data);
+        }
+    }
+
     async function makePayment() {
         try {
-            const response = await fetch('/lineofcreditaccount/payment', {
+            const response = await fetch(`/lineofcreditaccount/${accountNumber}/payments`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payment),
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log('Payment successful:', data);
                 setBalance(data.balance);
-                setLogs((prev) => [...prev, ...data.logs]);
+                setLogs(data.logs);
             } else {
                 const errorData = await response.json();
-                setLogs((prev) => [...prev, ...errorData.Logs]);
+                setLogs(errorData.Logs || []);
                 console.error('Error making payment:', response.statusText);
             }
         } catch (error) {

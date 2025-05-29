@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Concurrent;
 
 namespace ReactApp1.Server.Controllers
 {
@@ -6,6 +7,9 @@ namespace ReactApp1.Server.Controllers
     [Route("[controller]")]
     public class LineOfCreditAccountController : ControllerBase
     {
+        private static readonly ConcurrentDictionary<string, LineOfCreditAccount> _accounts = new();
+        private static readonly ConcurrentDictionary<string, List<LogEntry>> _logs = new();
+
         private readonly ILogger<LineOfCreditAccountController> _logger;
 
         public LineOfCreditAccountController(ILogger<LineOfCreditAccountController> logger)
@@ -13,54 +17,53 @@ namespace ReactApp1.Server.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetLineOfCreditAccount")]
-        public IEnumerable<LogEntry> Get()
-        {
-            var logs = new List<LogEntry>();
-
-            return logs;
-        }
-
         [HttpPost]
         public IActionResult Create([FromBody] CreateRequest request)
         {
-            var logs = new List<LogEntry>();
-
-            if (request.InitialBalance > 0)
-            {
-                logs.Add(new LogEntry("Failed to create account: Initial balance cannot be positive."));
-                return BadRequest("Initial balance cannot be positive.");
-            }
+            if (request.InitialBalance < 0)
+                return BadRequest("Initial balance cannot be negative.");
 
             var account = new LineOfCreditAccount(request.Owner, request.InitialBalance, 0);
-            var logMessage = $"Created a new Line of Credit account for {request.Owner} with an initial balance of {request.InitialBalance}";
-            _logger.LogInformation(logMessage);
-            logs.Add(new LogEntry(logMessage));
+            _accounts[account.Number] = account;
+            _logs[account.Number] = new List<LogEntry>();
 
-            return Ok(new
+            var logMessage = $"Created a new account for {request.Owner} with an initial balance of {request.InitialBalance}";
+            _logger.LogInformation(logMessage);
+            _logs[account.Number].Add(new LogEntry(logMessage));
+
+            return CreatedAtAction(nameof(GetLogs), new { accountNumber = account.Number }, new
             {
                 AccountNumber = account.Number,
                 Owner = account.Owner,
                 Balance = account.Balance,
-                Logs = logs
+                Logs = _logs[account.Number]
             });
         }
 
-        [HttpPost("payment")]
-        public IActionResult Payment([FromBody] PaymentRequest request)
+        [HttpGet("{accountNumber}/logs")]
+        public IActionResult GetLogs(string accountNumber)
         {
-            var logs = new List<LogEntry>();
+            if (!_accounts.ContainsKey(accountNumber))
+                return NotFound("Account not found.");
 
-            var account = new LineOfCreditAccount("John Doe", 0, -1000);
+            return Ok(_logs[accountNumber]);
+        }
+
+        [HttpPost("{accountNumber}/payments")]
+        public IActionResult Payment(string accountNumber,[FromBody] PaymentRequest request)
+        {
+            if (!_accounts.TryGetValue(accountNumber, out var account))
+                return NotFound("Account not found.");
+
             account.MakePayment(request.Amount, DateTime.Now);
             var logMessage = $"Payment of {request.Amount} made to account {account.Number}";
             _logger.LogInformation(logMessage);
-            logs.Add(new LogEntry(logMessage));
+            _logs[accountNumber].Add(new LogEntry(logMessage));
 
             return Ok(new
             {
                 Balance = account.Balance,
-                Logs = logs
+                Logs = _logs[accountNumber]
             });
         }
 
